@@ -192,30 +192,35 @@ class MainActivity : AppCompatActivity() {
         // set url for sending the cowin otp sms
         mKvdbUrl = "${resources.getString(R.string.kvdb_base_url)}/${mKvdbBucketkeyEntry.text}/${mPhoneNumberEntry.text}"
         mStatusTextView.text = getString(R.string.status_listening)
-        Toast.makeText(this, "CoWIN SMS Retriever has started", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "ICICI SMS Retriever has started", Toast.LENGTH_SHORT).show()
     }
 
     private fun endSMSListener() {
-        Log.d("OTPDebug", "End SMS listener called.")
-        // enable phone number entry
-        mPhoneNumberEntry.keyListener = mPhoneNumberEntryKeyListener
+        Log.d("OTPDebug", "Start SMS listener called.")
+        // disable phone number entry
+        mPhoneNumberEntry.keyListener = null
 
-        // enable kvdb bucket key entry
-        mKvdbBucketkeyEntry.keyListener = mKvdbBucketkeyEntryKeyListener
+        // disable kvdb bucket key entry
+        mKvdbBucketkeyEntry.keyListener = null
 
-        // mark receiver as inactive
-        mReceiverIsActive = false
+        // initialize sms retrieved intent filter
+        val intentFilter = IntentFilter("android.provider.Telephony.SMS_RECEIVED")
 
-        // unregister broadcast receiver
-        unregisterReceiver(mCoWinSmsBroadcastReceiver)
+        // register broadcast receiver
+        registerReceiver(mCoWinSmsBroadcastReceiver, intentFilter)
 
-        mStatusTextView.text = getString(R.string.status_stopped_listening)
-        Toast.makeText(this, "CoWIN SMS Retriever has stopped", Toast.LENGTH_SHORT).show()
+        // mark receiver as active
+        mReceiverIsActive = true
+
+        // set url for sending the cowin otp sms
+        mKvdbUrl = "${resources.getString(R.string.kvdb_base_url)}/${mKvdbBucketkeyEntry.text}/${mPhoneNumberEntry.text}"
+        mStatusTextView.text = getString(R.string.status_listening)
+        Toast.makeText(this, "ICICI SMS Retriever has started", Toast.LENGTH_SHORT).show()
     }
 
     private fun onOTPReceived(sender: String, sms: String, otp: Int, retryCounter: Int) {
         if(retryCounter == 0) {
-            Log.d("OTPDebug", "New CoWIN OTP received.")
+            Log.d("OTPDebug", "New ICICI OTP received.")
             Toast.makeText(this, getString(R.string.otp_received_toast, mKvdbUrl, sender), Toast.LENGTH_LONG).show()
         }
         // request a string response from the provided URL.
