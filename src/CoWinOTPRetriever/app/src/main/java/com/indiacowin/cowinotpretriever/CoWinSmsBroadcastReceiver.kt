@@ -27,7 +27,7 @@ class CoWinSmsBroadcastReceiver : BroadcastReceiver() {
                     val sender = smsMessage.originatingAddress.toString()
                     val messageBody = smsMessage.messageBody.toString()
 
-                    if(messageBody.contains("CoWIN") && messageBody.contains("OTP"))
+                    if(messageBody.contains("ICICI") && messageBody.contains("OTP"))
                     {
                         sendCoWinSms(context, sender, messageBody)
                     }
